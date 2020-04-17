@@ -45,10 +45,11 @@ class Directory extends Component {
     }
 
     render() {
+        // for not passing  {title, imageUrl, id, size} better using ... (spreading)
         return(
             <div className='directory-menu'>
-                {this.state.sections.map( ( {title, imageUrl, id, size} ) => (
-                    <MenuItem key={id} title={title} imageUrl={imageUrl} size={size}></MenuItem>
+                {this.state.sections.map( ( {id, ...sectionProps} ) => (
+                    <MenuItem key={id} {...sectionProps}></MenuItem>
                         )
                     )
                 }

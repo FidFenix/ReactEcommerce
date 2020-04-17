@@ -2,9 +2,15 @@ import React from 'react';
 
 import './menu-item.style.scss';
 
-const MenuItem= ({title, imageUrl, size}) => (
+import {withRouter} from 'react-router-dom';
 
-            <div className= {`${size}  menu-item`}>
+//to not make prop tunelling we will use withRouter (HoC)
+
+const MenuItem= ({title, imageUrl, size, history, linkUrl, match}) => (
+
+            <div className= {`${size}  menu-item`}
+                 onClick = {()=> history.push( `${match.url}${linkUrl}`)} // someurl/linkurl
+                >
                 <div className = 'background-image' 
                      style={{
                         background:`url(${imageUrl})`
@@ -19,4 +25,5 @@ const MenuItem= ({title, imageUrl, size}) => (
 
 )
 
-export default MenuItem;
+//HOC takes any component and modifies somehow and gives a powered up component
+export default withRouter(MenuItem);  //it will return router, params now
