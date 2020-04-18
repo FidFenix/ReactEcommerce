@@ -24,7 +24,7 @@ class SignIn extends Component {
 
             await auth.signInWithEmailAndPassword(email, password);
             this.setState({email:'', password:''});
-            
+
         }catch(error) {
             console.log(error);
         }
@@ -40,7 +40,7 @@ class SignIn extends Component {
         return(
             <div className='sign-in'>
                 <h2 className = 'hola'>I already have an Account</h2>
-                <spam>Sign in with your email and password</spam>
+                <span>Sign in with your email and password</span>
 
                 <form onSubmit={this.handleSubmit}>
                     <FormInput
