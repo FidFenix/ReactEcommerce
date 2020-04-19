@@ -1,7 +1,7 @@
-import SHOP_DATA from './shop.data';
+import SHOP_DATA_ARRAY from './shop.data.array';
 
 const INITIAL_STATE = {
-    collections: SHOP_DATA
+    collections: SHOP_DATA_ARRAY
 };
 
 const shopReducer = (prevState = INITIAL_STATE, action) => {
