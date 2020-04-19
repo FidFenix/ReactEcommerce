@@ -26,4 +26,4 @@ const MenuItem= ({title, imageUrl, size, history, linkUrl, match}) => (
 )
 
 //HOC takes any component and modifies somehow and gives a powered up component
-export default withRouter(MenuItem);  //it will return router, params now
+export default withRouter(MenuItem);  //it will return router, params now from Router component

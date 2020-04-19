@@ -51,6 +51,7 @@ class App extends Component {
     componentWillUnmount() {
         this.unsubcribeFromAuth();
     }
+    //if the Route does not match it will throw the header by default
     render() {
         return(
             <div>
