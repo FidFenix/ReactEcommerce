@@ -15,8 +15,9 @@ import {selectCurrentUser} from '../../redux/user/user.selectors';
 import './header.style.scss';
 
 const Header = ({currentUser, hidden}) => (
-    <div className='header'>
-        <Link className='logo-container' to="/">
+    
+    <div className = 'header'>
+        <Link className='logo-container' to = '/'>
             <Logo className='logo'></Logo>
         </Link>
         <div className='options'>
