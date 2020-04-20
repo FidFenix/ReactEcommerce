@@ -5,7 +5,7 @@ import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import {auth, createUserProfileDocument, addCollectionAndDocuments} from './firebase/firebase-util'; //we really want to store the state of the user
+import {auth, createUserProfileDocument} from './firebase/firebase-util'; //we really want to store the state of the user
 
 
 import {connect} from 'react-redux';
@@ -27,7 +27,7 @@ class App extends Component {
     componentDidMount() { //this is like an open a suscriber (always open) -> auth.onAuthStateChanged
         //this is going to listen the auth
 
-        const {setCurrentUser, collectionsArray} = this.props;
+        const {setCurrentUser} = this.props;
         this.unsubcribeFromAuth = auth.onAuthStateChanged(async userAuth => {
 
             if ( userAuth ) {//also alloses to get propeties of the data
