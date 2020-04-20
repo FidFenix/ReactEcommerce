@@ -5,7 +5,7 @@ import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import {auth, createUserProfileDocument} from './firebase/firebase-util'; //we really want to store the state of the user
+import {auth, createUserProfileDocument, addCollectionAndDocuments} from './firebase/firebase-util'; //we really want to store the state of the user
 
 
 import {connect} from 'react-redux';
@@ -14,6 +14,7 @@ import {setCurrentUser} from './redux/user/user.actions';
 import {selectCurrentUser} from './redux/user/user.selectors';
 import {createStructuredSelector} from 'reselect';
 
+//import { selectCollectionForPreview } from './redux/shop/shop.selectors';
 import CheckoutPage from './pages/checkout/checkout.component';
 
 class App extends Component {
@@ -26,7 +27,7 @@ class App extends Component {
     componentDidMount() { //this is like an open a suscriber (always open) -> auth.onAuthStateChanged
         //this is going to listen the auth
 
-        const {setCurrentUser} = this.props;
+        const {setCurrentUser, collectionsArray} = this.props;
         this.unsubcribeFromAuth = auth.onAuthStateChanged(async userAuth => {
 
             if ( userAuth ) {//also alloses to get propeties of the data
@@ -43,7 +44,8 @@ class App extends Component {
             //createUserProfileDocument(userAuth);
             //this.setState({currentUser: user});  //even if we refreshed the app, firebase now, just out of the box
             //console.log(userAuth);
-            setCurrentUser(userAuth)
+            setCurrentUser(userAuth);
+            //addCollectionAndDocuments('collections', collectionsArray.map( ({title, items}) => ({title, items}) );
             }
         });
     }
@@ -72,7 +74,8 @@ class App extends Component {
     currentUser: user.currentUser
 })*/
 const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser
+    currentUser: selectCurrentUser,
+    //collectionsArray: selectCollectionForPreview
 })
 
 const mapDispatchToProps = (dispatch) => ({
