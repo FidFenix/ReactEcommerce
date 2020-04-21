@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-
+ 
 const selectShop = (state) => state.collectionsShop;   //this name is the mapped in teh root-reducer
 
 export const selectCollectionShop = createSelector(
@@ -17,3 +17,8 @@ export const selectCollection = selectionUrlParam =>
         [selectCollectionShop],
         collections => collections? collections[selectionUrlParam] : null
     );
+
+    export const selectIsCollectionFetching = createSelector(
+        [selectShop],
+        shop => shop.isFetching
+    )

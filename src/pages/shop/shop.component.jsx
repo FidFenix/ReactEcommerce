@@ -15,24 +15,28 @@ import { Route } from 'react-router-dom';
     </div>
 );*/
 
-import { firestore, convertColletionsSnapshotToMap } from  '../../firebase/firebase-util';
-import { setCollections } from '../../redux/shop/shop.actions';
+//import { firestore, convertColletionsSnapshotToMap } from  '../../firebase/firebase-util';
+//import { setCollections } from '../../redux/shop/shop.actions';
 
 import { connect } from 'react-redux';
 
 import WithSpinner from '../../components/with-spinner/with-snipper.component';
+
+import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
+import { createStructuredSelector } from 'reselect';
+import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
 
 const CollectionOverviewWithSpinner = WithSpinner(CollectionOverview); //using HoC
 
 const CollectionPageWithSpinner = WithSpinner(CollectionPage); //using HoC
 
 class ShopPage extends Component {
-    constructor(props) {
+    /*constructor(props) {
         super(props);
         this.state = {
-            loading: true
+            loading: true //now loading comes from the state of fetchingData
         }
-    }
+    }*/
     /*
     state = {
         loading: true
@@ -40,11 +44,12 @@ class ShopPage extends Component {
     }
     */
 
-    unsubscribeFromSnapshot : null
+    //unsubscribeFromSnapshot : null
     
     componentDidMount() {
-        const { setCollections } = this.props
-        const collectionRef = firestore.collection('collections');
+        const { fetchCollectionsStartAsync} = this.props
+        fetchCollectionsStartAsync();
+        //const collectionRef = firestore.collection('collections');
 
         //Fidel: maybe we can modify  this to wait data without spinner with callbacks
         /*this.unsubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
@@ -57,12 +62,14 @@ class ShopPage extends Component {
         //get() is an API call, promise style
         //OJO: the only time we get items from Firebase is when we remount the shop,
         //this is beacuse we are not using stream style as in the TOP
-        collectionRef.get().then(async snapshot => {
+        /*collectionRef.get().then(async snapshot => {
             const collectionMap = convertColletionsSnapshotToMap(snapshot);
             setCollections(collectionMap); //update reducer
             this.setState({loading : false});
             console.log("paso!!!")
-        });
+        }); 
+        WE DONT NEED THIS SINCE IT IS IN REDUX-THUN;
+        */
 
 
         //https://firestore.googleapis.com/v1/projects/YOUR_PROJECT_ID/databases/(default)/documents/cities/LA
@@ -91,23 +98,36 @@ class ShopPage extends Component {
 
     //WITH SPINNER is for loading asyncronos data
     render() {
-        const { match } = this.props;
+        const { match, isCollectionFetching } = this.props;
 
         return(
             <div className='shop-page'>
                 <Route 
                     exact path={`${match.path}`} 
-                    render={(otherProps)=> <CollectionOverviewWithSpinner isLoading = {this.state.loading} {...otherProps}></CollectionOverviewWithSpinner>}></Route>
+                    render={(otherProps)=> <CollectionOverviewWithSpinner isLoading = {isCollectionFetching} {...otherProps}></CollectionOverviewWithSpinner>}></Route>
                 <Route 
                     path={`${match.path}/:collectionId`} 
-                    render={(otherProps)=> <CollectionPageWithSpinner isLoading = {this.state.loading} {...otherProps}></CollectionPageWithSpinner>}></Route>
+                    render={(otherProps)=> <CollectionPageWithSpinner isLoading = {isCollectionFetching} {...otherProps}></CollectionPageWithSpinner>}></Route>
             </div>
         );
     }
 }
 
 
-const mapDispatchToProps = (dispatch) => ({
+/* Code used when we were pulling data from Firestore and storing in redux
+(const mapDispatchToProps = (dispatch) => ({
     setCollections: collectionsMap => dispatch(setCollections(collectionsMap))
+
+});*/
+
+//when we are using redux-thunk
+const mapStateToProps = createStructuredSelector({
+    isCollectionFetching: selectIsCollectionFetching
+})
+
+//when we dispatch, we pass a function, not an object
+const mapDispatchToProps = (dispatch) => ({
+    fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync())
 });
-export default connect(null, mapDispatchToProps)(ShopPage);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
