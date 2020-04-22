@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import CollectionOverview from '../../components/collections-overview/collections-overview.component'
+import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
 import CollectionPage from '../../pages/collection/collection.component';
 
 import { Route } from 'react-router-dom';
@@ -24,11 +24,11 @@ import WithSpinner from '../../components/with-spinner/with-snipper.component';
 
 import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
 import { createStructuredSelector } from 'reselect';
-import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
+import { selectIsCollectionFetching, selectIsCollectionLoaded} from '../../redux/shop/shop.selectors';
 
-const CollectionOverviewWithSpinner = WithSpinner(CollectionOverview); //using HoC
+//const CollectionOverviewWithSpinner = WithSpinner(CollectionOverview); //using HoC
 
-const CollectionPageWithSpinner = WithSpinner(CollectionPage); //using HoC
+const CollectionPageWithSpinner = WithSpinner(CollectionPage); //using HoC   , but this is a shit, better create a container
 
 class ShopPage extends Component {
     /*constructor(props) {
@@ -47,7 +47,7 @@ class ShopPage extends Component {
     //unsubscribeFromSnapshot : null
     
     componentDidMount() {
-        const { fetchCollectionsStartAsync} = this.props
+        const { fetchCollectionsStartAsync } = this.props
         fetchCollectionsStartAsync();
         //const collectionRef = firestore.collection('collections');
 
@@ -97,17 +97,19 @@ class ShopPage extends Component {
     */
 
     //WITH SPINNER is for loading asyncronos data
+    // render={(otherProps)=> <CollectionOverviewWithSpinner isLoading = {isCollectionFetching} {...otherProps}></CollectionOverviewWithSpinner>}></Route>
+
     render() {
-        const { match, isCollectionFetching } = this.props;
+        const { match, isCollectionFetching, isCollectionLoaded } = this.props;
 
         return(
             <div className='shop-page'>
                 <Route 
-                    exact path={`${match.path}`} 
-                    render={(otherProps)=> <CollectionOverviewWithSpinner isLoading = {isCollectionFetching} {...otherProps}></CollectionOverviewWithSpinner>}></Route>
+                    exact path={`${match.path}`} //now switch from reder to container
+                    container = { CollectionsOverviewContainer }></Route>
                 <Route 
                     path={`${match.path}/:collectionId`} 
-                    render={(otherProps)=> <CollectionPageWithSpinner isLoading = {isCollectionFetching} {...otherProps}></CollectionPageWithSpinner>}></Route>
+                    render={(otherProps)=> <CollectionPageWithSpinner isLoading = {!isCollectionLoaded} {...otherProps}></CollectionPageWithSpinner>}></Route>
             </div>
         );
     }
@@ -122,8 +124,9 @@ class ShopPage extends Component {
 
 //when we are using redux-thunk
 const mapStateToProps = createStructuredSelector({
-    isCollectionFetching: selectIsCollectionFetching
-})
+    //isCollectionFetching: selectIsCollectionFetching,
+    isCollectionLoaded: selectIsCollectionLoaded
+});
 
 //when we dispatch, we pass a function, not an object
 const mapDispatchToProps = (dispatch) => ({

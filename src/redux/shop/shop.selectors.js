@@ -12,13 +12,23 @@ export const selectCollectionForPreview = createSelector(
     collectionShops => collectionShops? Object.keys(collectionShops).map((key) => collectionShops[key]) : []
 );
 
-export const selectCollection = selectionUrlParam => 
-    createSelector(
+export const selectCollection = selectionUrlParam => createSelector(
         [selectCollectionShop],
         collections => collections? collections[selectionUrlParam] : null
-    );
+);
 
-    export const selectIsCollectionFetching = createSelector(
+export const selectIsCollectionFetching = createSelector(
         [selectShop],
         shop => shop.isFetching
-    )
+)
+
+export const selectIsCollectionLoaded = createSelector(
+    [selectShop],
+    shop => !!shop.collections
+)
+/* Por que hay problema cuando llamo 
+export const selectIsCollectionLoaded = () => (
+    [selectShop],
+    shop => !!shop.collections
+)
+*/
