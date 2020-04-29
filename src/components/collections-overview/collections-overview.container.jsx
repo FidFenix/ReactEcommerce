@@ -15,7 +15,7 @@ const mapStateToProps = createStructuredSelector({
 //but this is hard to read, if we had more HOC wrapping is just tedious
 //export CollectionsOverviewContainer = connect(mapStateToProps)(WithSpinner(CollectionOverview));
 //even worse
-//export CollectionsOverviewContainer = withRouter(connect(mapStateToProps)(WithSpinner(CollectionOverview)));
+//export CollectionsOverviewContainer = withRouter(connect(mapStateToProps)(WithSpinner(CollectionOverview))); 
 // So we can leverage a library called { compose }
 
 
