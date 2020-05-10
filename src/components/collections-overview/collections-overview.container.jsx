@@ -1,8 +1,14 @@
-import React from 'react';
+/*
+    This is a double wrapping for isFetching and isLoaded
+    For doing that we need compose from redux
+
+    instead of doing  connect(mapStateToProps)(WithSpinner(CollectionsOverview))
+*/
+// does not even use redux
 import { connect }  from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { selectIsCollectionFetching, selectIsCollectionLoaded} from '../../redux/shop/shop.selectors';
+import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
 import WithSpinner from '../../components/with-spinner/with-snipper.component';
 import CollectionOverview from '../../components/collections-overview/collections-overview.component';
 

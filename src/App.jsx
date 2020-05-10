@@ -27,8 +27,8 @@ class App extends Component {
     componentDidMount() { //this is like an open a suscriber (always open) -> auth.onAuthStateChanged
         //this is going to listen the auth
 
-        const {setCurrentUser} = this.props;
-        this.unsubcribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+        const {setCurrentUser} = this.props;  //firebase is a full stream of data, so we dont have a complete action
+        this.unsubcribeFromAuth = auth.onAuthStateChanged(async userAuth => { //This async function is very basic next (Observable)
 
             if ( userAuth ) {//also alloses to get propeties of the data
                 const userRef = await createUserProfileDocument(userAuth);
@@ -39,18 +39,16 @@ class App extends Component {
                             ...onSnapshot.data()
                     }); // because state is asyncronus
                 });
-
             }else {
-            //createUserProfileDocument(userAuth);
-            //this.setState({currentUser: user});  //even if we refreshed the app, firebase now, just out of the box
-            //console.log(userAuth);
-            setCurrentUser(userAuth);
-            //addCollectionAndDocuments('collections', collectionsArray.map( ({title, items}) => ({title, items}) );
+                setCurrentUser(userAuth); // userAuth anyway is null;
             }
         });
     }
 
-    componentWillUnmount() {
+    //It is better to write Promises instead of simple observer listeners 
+    //Better use a promise call when using a backend server
+
+    componentWillUnmount() { //Because there is no complete action, we need to unsubcribe from Firebase
         this.unsubcribeFromAuth();
     }
     //if the Route does not match it will throw the header by default

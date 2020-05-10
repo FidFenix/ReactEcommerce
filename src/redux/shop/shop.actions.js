@@ -25,6 +25,7 @@ export const fetchCollectionsFailure = (errorMessage) => ({
     payload: errorMessage
 })
 
+//This way we throught all the asyn Function, this is Fucntion, IT DOES NOT HAVE ({}), IT IS SIMPLY {}
 export const fetchCollectionsStartAsync = () => {
     return dispatch => {
         const collectionRef = firestore.collection('collections');

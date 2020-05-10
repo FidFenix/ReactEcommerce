@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 
 import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
-import CollectionPage from '../../pages/collection/collection.component';
+import CollectionContainer from '../collection/collection.container';
+//import CollectionPage from '../../pages/collection/collection.component';
 
 import { Route } from 'react-router-dom';
 
@@ -20,15 +21,13 @@ import { Route } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 
-import WithSpinner from '../../components/with-spinner/with-snipper.component';
-
 import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
-import { createStructuredSelector } from 'reselect';
-import { selectIsCollectionFetching, selectIsCollectionLoaded} from '../../redux/shop/shop.selectors';
+//import { createStructuredSelector } from 'reselect';
+//import {  selectIsCollectionLoaded } from '../../redux/shop/shop.selectors';
 
 //const CollectionOverviewWithSpinner = WithSpinner(CollectionOverview); //using HoC
 
-const CollectionPageWithSpinner = WithSpinner(CollectionPage); //using HoC   , but this is a shit, better create a container
+//const CollectionPageWithSpinner = WithSpinner(CollectionPage); //using HoC it is like this , but this is a shit, better create a container
 
 class ShopPage extends Component {
     /*constructor(props) {
@@ -49,37 +48,6 @@ class ShopPage extends Component {
     componentDidMount() {
         const { fetchCollectionsStartAsync } = this.props
         fetchCollectionsStartAsync();
-        //const collectionRef = firestore.collection('collections');
-
-        //Fidel: maybe we can modify  this to wait data without spinner with callbacks
-        /*this.unsubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
-            const collectionMap = convertColletionsSnapshotToMap(snapshot);
-            setCollections(collectionMap); //update reducer
-            this.setState({loading : false});
-        });*/
-
-        //we are changing to another way of getting data from Firebase
-        //get() is an API call, promise style
-        //OJO: the only time we get items from Firebase is when we remount the shop,
-        //this is beacuse we are not using stream style as in the TOP
-        /*collectionRef.get().then(async snapshot => {
-            const collectionMap = convertColletionsSnapshotToMap(snapshot);
-            setCollections(collectionMap); //update reducer
-            this.setState({loading : false});
-            console.log("paso!!!")
-        }); 
-        WE DONT NEED THIS SINCE IT IS IN REDUX-THUN;
-        */
-
-
-        //https://firestore.googleapis.com/v1/projects/YOUR_PROJECT_ID/databases/(default)/documents/cities/LA
-        //but the out might change, we are not dealing with snapshot
-        //we can use cconsole.log to see thee ultra nested object to get the data, LOL
-        /*fetch('https://firestore.googleapis.com/v1/projects/ecommerce-4c056/databases/(default)/documents/collections')
-            .then(response => response.json())
-            .then(json => setCollections(json))
-            .then(this.setState({loading: false}))*/
-        //Another way is using FETCH
 
     }
 
@@ -100,16 +68,20 @@ class ShopPage extends Component {
     // render={(otherProps)=> <CollectionOverviewWithSpinner isLoading = {isCollectionFetching} {...otherProps}></CollectionOverviewWithSpinner>}></Route>
 
     render() {
-        const { match, isCollectionFetching, isCollectionLoaded } = this.props;
+        const { match } = this.props;
 
         return(
             <div className='shop-page'>
+                <Route //this Route works 1 level with isFetchingCollection, but for going to collectionID we need to make sure the data has arrived
+                    exact path={`${match.path}`} //now switch from render to component(before there was 'container' uhmmm) using Container Pattern
+                    component = { CollectionsOverviewContainer }></Route>
                 <Route 
-                    exact path={`${match.path}`} //now switch from reder to container
-                    container = { CollectionsOverviewContainer }></Route>
-                <Route 
-                    path={`${match.path}/:collectionId`} 
-                    render={(otherProps)=> <CollectionPageWithSpinner isLoading = {!isCollectionLoaded} {...otherProps}></CollectionPageWithSpinner>}></Route>
+                   // path={`${match.path}/:collectionId`} 
+                    //render={(otherProps)=> <CollectionPageWithSpinner isLoading = {!isCollectionLoaded} {...otherProps}></CollectionPageWithSpinner>}
+                    path =  {`${match.path}/:collectionId`}
+                    component = { CollectionContainer }
+                    >
+                </Route>
             </div>
         );
     }
@@ -122,15 +94,15 @@ class ShopPage extends Component {
 
 });*/
 
-//when we are using redux-thunk
-const mapStateToProps = createStructuredSelector({
-    //isCollectionFetching: selectIsCollectionFetching,
-    isCollectionLoaded: selectIsCollectionLoaded
-});
+//when we are using redux-thunk, these two methods are going to be changed into a container pattern
+//const mapStateToProps = createStructuredSelector({
+    //isCollectionFetching: selectIsCollectionFetching, // Now it is in the Container Pattern
+  //  isCollectionLoaded: selectIsCollectionLoaded
+//});
 
 //when we dispatch, we pass a function, not an object
 const mapDispatchToProps = (dispatch) => ({
     fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
+export default connect(null, mapDispatchToProps)(ShopPage);

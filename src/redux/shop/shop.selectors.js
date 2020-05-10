@@ -24,7 +24,7 @@ export const selectIsCollectionFetching = createSelector(
 
 export const selectIsCollectionLoaded = createSelector(
     [selectShop],
-    shop => !!shop.collections
+    shop =>  !!shop.collections // DOUBLE BANG, we cannot use isFetching property because initial state is false
 )
 /* Por que hay problema cuando llamo 
 export const selectIsCollectionLoaded = () => (
