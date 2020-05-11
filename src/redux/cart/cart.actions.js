@@ -18,3 +18,11 @@ export const removeItemFromCart = (item) => ({
     type: CartActionTypes.REMOVE_ITEM_FROM_CART,
     payload: item 
 })
+
+export const clearAllItemsFromCart = () => ({
+    type: CartActionTypes.CLEAR_ALL_ITEMS_FROM_CART,
+})
+
+export const clearAllItemsFromCartStart = () => ({ //should not exist
+    type: CartActionTypes.CLEAR_ALL_ITEMS_FROM_CART_START,
+})
